@@ -11,6 +11,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script>
+    /* ── Double-blind toggle ─────────────────────────────────────
+       Set to  true  → blinded   (hides authors & acknowledgements)
+       Set to  false → unblinded (shows authors & acknowledgements)
+    ──────────────────────────────────────────────────────────── */
+    const BLIND_REVIEW = true;
+  </script>
+  <style>
+    [data-blind]   { display: none; }
+    [data-unblind] { display: none; }
+  </style>
 </head>
 <body>
 
@@ -57,11 +68,16 @@
         <span class="hero-title-sub">Lessons from OntoAgent and LLM Deployment in HARMONIC for Safety-Critical Robot Teaming</span>
       </h1>
 
-      <p class="hero-authors">
+      <p class="hero-authors" data-blind>
         <em>Authors withheld for double-blind review</em>
       </p>
+      <p class="hero-authors" data-unblind>
+        Sanjay Oruganti<sup>1</sup>, Sergei Nirenburg<sup>1</sup>, Marjorie McShane<sup>1</sup>, Jesse English<sup>1</sup>, Michael Roberts<sup>1</sup>, Christian Arndt<sup>1</sup>, Ramviyas Parasuraman<sup>2</sup>, Luis Sentis<sup>3</sup>
+        <br><small><sup>1</sup>Rensselaer Polytechnic Institute &nbsp; <sup>2</sup>University of Georgia &nbsp; <sup>3</sup>University of Texas at Austin</small>
+      </p>
 
-      <span class="hero-conference">IROS 2026 (Under Review)</span>
+      <span class="hero-conference" data-blind>IROS 2026 (Under Review)</span>
+      <span class="hero-conference" data-unblind>IROS 2026</span>
 
       <div class="hero-abstract">
         <h2 class="hero-abstract-title">Abstract</h2>
@@ -955,13 +971,24 @@
     </div>
   </section>
 
+  <!-- ACKNOWLEDGEMENTS (visible only when unblinded) -->
+  <section id="acknowledgements" data-unblind>
+    <div class="container">
+      <p class="section-label">Support</p>
+      <h2 class="section-title">Acknowledgements</h2>
+      <div class="section-divider"></div>
+      <p class="section-intro">This work was supported in part by ONR Grant #N00014-23-1-2060. The views expressed are those of the authors and do not necessarily reflect those of the Office of Naval Research.</p>
+    </div>
+  </section>
+
   </main>
   </div><!-- /page-wrapper -->
 
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      HARMONIC &mdash; IROS 2026 &nbsp;|&nbsp; Companion project page for double-blind review
+      <span data-blind>HARMONIC &mdash; IROS 2026 &nbsp;|&nbsp; Companion project page for double-blind review</span>
+      <span data-unblind>HARMONIC &mdash; IROS 2026 &nbsp;|&nbsp; Oruganti et al.</span>
     </div>
   </footer>
 
