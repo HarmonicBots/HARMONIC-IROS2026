@@ -243,7 +243,28 @@ section:nth-of-type(even) { background: #f7f9fc; }
 .hero-authors {
   color: var(--text-muted);
   font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.author-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.15rem 1.25rem;
   margin-bottom: 0.25rem;
+}
+.author-name {
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+.author-affiliations {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.1rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
 }
 
 .hero-conference {

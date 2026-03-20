@@ -71,13 +71,25 @@
       <p class="hero-authors" data-blind>
         <em>Authors withheld for double-blind review</em>
       </p>
-      <p class="hero-authors" data-unblind>
-        Sanjay Oruganti<sup>1</sup>, Sergei Nirenburg<sup>1</sup>, Marjorie McShane<sup>1</sup>, Jesse English<sup>1</sup>, Michael Roberts<sup>1</sup>, Christian Arndt<sup>1</sup>, Ramviyas Parasuraman<sup>2</sup>, Luis Sentis<sup>3</sup>
-        <br><small><sup>1</sup>Rensselaer Polytechnic Institute &nbsp; <sup>2</sup>University of Georgia &nbsp; <sup>3</sup>University of Texas at Austin</small>
-      </p>
-
-      <span class="hero-conference" data-blind>IROS 2026 (Under Review)</span>
-      <span class="hero-conference" data-unblind>IROS 2026</span>
+      <div class="hero-authors" data-unblind>
+        <div class="author-list">
+          <span class="author-name">Sanjay Oruganti<sup>1</sup></span>
+          <span class="author-name">Sergei Nirenburg<sup>1</sup></span>
+          <span class="author-name">Marjorie McShane<sup>1</sup></span>
+          <span class="author-name">Jesse English<sup>1</sup></span>
+        </div>
+        <div class="author-list">
+          <span class="author-name">Michael Roberts<sup>1</sup></span>
+          <span class="author-name">Christian Arndt<sup>1</sup></span>
+          <span class="author-name">Ramviyas Parasuraman<sup>2</sup></span>
+          <span class="author-name">Luis Sentis<sup>3</sup></span>
+        </div>
+        <div class="author-affiliations">
+          <span><sup>1</sup>Rensselaer Polytechnic Institute</span>
+          <span><sup>2</sup>University of Georgia</span>
+          <span><sup>3</sup>University of Texas at Austin</span>
+        </div>
+      </div>
 
       <div class="hero-abstract">
         <h2 class="hero-abstract-title">Abstract</h2>
@@ -997,7 +1009,7 @@
     /* Apply blind/unblind visibility based on the BLIND_REVIEW flag */
     (function() {
       const show = BLIND_REVIEW ? '[data-blind]' : '[data-unblind]';
-      document.querySelectorAll(show).forEach(el => el.style.display = '');
+      document.querySelectorAll(show).forEach(el => el.removeAttribute(BLIND_REVIEW ? 'data-blind' : 'data-unblind'));
     })();
   </script>
   <script src="js/harmonic.js"></script>
