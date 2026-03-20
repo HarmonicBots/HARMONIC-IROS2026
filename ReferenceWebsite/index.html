@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trust in Human-Robot Teams Requires Metacognition and Cognitive Transparency — ICHMS 2026</title>
+  <meta name="description" content="Companion webpage for the ICHMS 2026 paper on HARMONIC: a dual-layer cognitive-robotic architecture enabling metacognition and cognitive transparency in human-robot teams." />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Geist font via Google Fonts proxy (fontsource mirror) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ========================================================
+       MOBILE TOPBAR (hidden on desktop)
+  ======================================================== -->
+  <div id="topbar" aria-label="Mobile navigation bar">
+    <button class="topbar-toggle" id="sidebarToggle" aria-label="Open project menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="topbar-brand">HARMONIC</span>
+    <span class="topbar-crumb">ICHMS 2026</span>
+  </div>
+
+  <!-- Backdrop for mobile sidebar -->
+  <div id="sidebar-backdrop" aria-hidden="true"></div>
+
+  <!-- ========================================================
+       PAGE WRAPPER (sidebar + content flex row)
+  ======================================================== -->
+  <div class="page-wrapper">
+
+  <!-- PROJECT SIDEBAR -->
+  <aside id="sidebar" aria-label="Page navigation">
+
+    <a href="https://www.leia-lab.com" class="sidebar-leia-link" target="_blank" rel="noopener">
+      <i class="fas fa-arrow-left"></i> Go to LEIA Lab website
+    </a>
+
+    <nav class="sidebar-nav" aria-label="On this page">
+      <a href="#hero"         class="sidebar-page-link" data-section="hero">Abstract</a>
+      <a href="#background"   class="sidebar-page-link" data-section="background">Background</a>
+      <a href="#architecture" class="sidebar-page-link" data-section="architecture">HARMONIC Architecture</a>
+      <a href="#demo"         class="sidebar-page-link" data-section="demo">OntoAgent Evaluation</a>
+      <a href="#llm"          class="sidebar-page-link" data-section="llm">LLM Results</a>
+      <a href="#references"   class="sidebar-page-link" data-section="references">References</a>
+      <a href="#glossary"     class="sidebar-page-link" data-section="glossary">Glossary</a>
+    </nav>
+
+  </aside>
+
+  <!-- MAIN CONTENT COLUMN -->
+  <main>
+
+  <!-- ========================================================
+       HERO
+  ======================================================== -->
+  <header id="hero">
+    <div class="container">
+      <img
+        src="assets/images/harmonic-logo.png"
+        alt="HARMONIC logo"
+        class="hero-logo"
+      />
+
+      <h1 class="hero-title">
+        Trust in Human-Robot Teams Requires Metacognition and Cognitive Transparency
+      </h1>
+
+      <p class="hero-authors">
+        Sanjay Oruganti &nbsp;·&nbsp; Sergei Nirenburg &nbsp;·&nbsp; Marjorie McShane &nbsp;·&nbsp; Jesse English
+        <br />
+        <span style="font-size:0.85em;">Cognitive Science Department, Rensselaer Polytechnic Institute, Troy, NY 12180, USA</span>
+      </p>
+
+      <span class="hero-conference">ICHMS 2026</span>
+
+      <blockquote class="hero-abstract">
+        Effective human-robot teaming requires more than tactical proficiency. It demands metacognition and
+        cognitive transparency: robotic teammates must recognize gaps in their own knowledge, assess whether
+        their current understanding is sufficient to act, and expose their reasoning to human partners. We
+        argue that these capabilities require explicit architectural support and demonstrate them in a
+        functioning system built on HARMONIC, a dual-layer architecture integrating the OntoAgent cognitive
+        architecture with reactive tactical control. We evaluate the system through a simulated collaborative
+        search task involving two heterogeneous robots and a human operator. A controlled comparison with
+        seven large language models (LLMs) on the same scenario reveals that the most critical capability,
+        metacognitive self-assessment, is absent in 32 of 35 LLM trials: LLMs act on incomplete information
+        and hallucinate details rather than detecting knowledge gaps. These results show that the
+        interpretability and predictability on which calibrated trust depends require knowledge-grounded
+        cognitive architecture, not language model scale.
+      </blockquote>
+    </div>
+  </header>
+
+
+  <!-- ========================================================
+       BACKGROUND
+  ======================================================== -->
+  <section id="background">
+    <div class="container">
+      <p class="section-label">Context &amp; Motivation</p>
+      <h2 class="section-title">Background</h2>
+      <div class="section-divider"></div>
+
+      <div class="bg-pillars">
+
+        <div class="bg-pillar">
+          <div class="bg-pillar-icon"><i class="fas fa-question-circle"></i></div>
+          <h3 class="bg-pillar-title">What does it mean to trust a robot?</h3>
+          <p>Trust in a robotic teammate is not a binary switch — it must be <em>calibrated</em>. A human partner needs to know when a robot's knowledge is complete and its plan is sound, and equally when it is not. Without that signal, humans cannot decide appropriately when to delegate, when to supervise, and when to intervene. This is the central challenge that HARMONIC addresses.</p>
+        </div>
+
+        <div class="bg-pillar">
+          <div class="bg-pillar-icon"><i class="fas fa-brain"></i></div>
+          <h3 class="bg-pillar-title">Metacognition — knowing what you don't know</h3>
+          <p>Effective teaming requires a robot to monitor the state of its own knowledge before acting. When critical information is missing — such as a physical description of an object it is being asked to find — the robot must recognise that gap and seek clarification rather than proceeding on assumption. This <strong>metacognitive self-assessment</strong> is the prerequisite for trustworthy behaviour; without it, confident-sounding actions may be entirely ungrounded.</p>
+        </div>
+
+        <div class="bg-pillar">
+          <div class="bg-pillar-icon"><i class="fas fa-eye"></i></div>
+          <h3 class="bg-pillar-title">Cognitive transparency — showing your work</h3>
+          <p>Even a robot that reasons correctly cannot build trust if its reasoning is invisible. <strong>Cognitive transparency</strong> means exposing the chain from perception to decision in terms a human partner can inspect and contest. This goes beyond generating natural-language summaries after the fact; it requires that the robot's internal representations — its plans, its uncertainty, its grounding of perceptions to memory — be structurally accessible and legible.</p>
+        </div>
+
+        <div class="bg-pillar">
+          <div class="bg-pillar-icon"><i class="fas fa-robot"></i></div>
+          <h3 class="bg-pillar-title">Why current approaches fall short</h3>
+          <p>Large language models excel at fluid natural-language interaction but rely on parametric knowledge that cannot be updated mid-task, produce reasoning that is opaque by construction, and hallucinate confidently when information is absent — exactly the failure mode that erodes calibrated trust. Classical cognitive architectures (SOAR, ACT-R, DIARC) offer structured, inspectable reasoning but were not designed for rich natural-language dialog or heterogeneous multi-robot coordination. HARMONIC occupies the gap: a dual-layer architecture in which an ontology-grounded cognitive engine (OntoAgent) handles deliberative reasoning and communication while reactive behaviour trees handle real-time execution.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================
+       ARCHITECTURE (interactive)
+  ======================================================== -->
+  <section id="architecture">
+    <div class="container">
+      <p class="section-label">System Design</p>
+      <h2 class="section-title">HARMONIC Architecture</h2>
+      <div class="section-divider"></div>
+
+      <div class="architecture-intro">
+        <div class="architecture-hint">
+          <i class="fas fa-hand-pointer"></i>
+          <span>Click on the hotspots to explore each component</span>
+        </div>
+      </div>
+
+      <div class="architecture-container">
+        <!-- Diagram with hotspots -->
+        <div class="architecture-diagram">
+          <img src="assets/images/architecture-overview.jpg" alt="HARMONIC System Architecture" />
+
+          <!-- External Top Blocks -->
+          <div class="hotspot dark-blue" style="top:3%;left:16.5%;" data-component="long-horizon-planning"></div>
+          <div class="hotspot dark-blue" style="top:3%;left:53.25%;" data-component="metacognition"></div>
+          <div class="hotspot dark-blue" style="top:3%;left:76%;" data-component="explainability"></div>
+
+          <!-- System 2: Strategic Layer -->
+          <div class="hotspot black" style="top:26.25%;left:28.5%;" data-component="system2-layer"></div>
+          <div class="hotspot navy-blue" style="top:33.5%;left:26.5%;" data-component="ontoagent-framework"></div>
+
+          <!-- OntoAgent Components -->
+          <div class="hotspot navy-blue" style="top:41.5%;left:16%;" data-component="perception-interpretation"></div>
+          <div class="hotspot navy-blue" style="top:41.5%;left:35%;" data-component="attention-service-s2"></div>
+          <div class="hotspot navy-blue" style="top:41.5%;left:51%;" data-component="strategic-reasoning"></div>
+          <div class="hotspot navy-blue" style="top:41.5%;left:73.5%;" data-component="rendering-services"></div>
+
+          <!-- Communication APIs -->
+          <div class="hotspot black" style="top:55%;left:55%;" data-component="perception-apis"></div>
+          <div class="hotspot black" style="top:55%;left:74%;" data-component="action-apis"></div>
+
+          <!-- System 1: Tactical Layer -->
+          <div class="hotspot black" style="top:84%;left:30%;" data-component="system1-layer"></div>
+
+          <!-- System 1 Components -->
+          <div class="hotspot deep-green" style="top:70%;left:16%;" data-component="perception-services"></div>
+          <div class="hotspot deep-green" style="top:70%;left:35%;" data-component="attention-service-s1"></div>
+          <div class="hotspot deep-green" style="top:52%;left:52%;" data-component="tactical-reasoning"></div>
+          <div class="hotspot deep-green" style="top:78.5%;left:54%;" data-component="behavior-trees"></div>
+          <div class="hotspot deep-green" style="top:70%;left:74%;" data-component="effector-services"></div>
+
+          <!-- Perception Inputs / Action Outputs -->
+          <div class="hotspot black" style="top:45%;left:2.5%;" data-component="perception-inputs"></div>
+          <div class="hotspot black" style="top:43%;left:90%;" data-component="action-outputs"></div>
+
+          <!-- Bottom External Modules -->
+          <div class="hotspot dark-green" style="top:95.5%;left:10%;" data-component="perception-mapping"></div>
+          <div class="hotspot dark-green" style="top:95.5%;left:28.9%;" data-component="reactive-planning"></div>
+          <div class="hotspot dark-green" style="top:95.5%;left:55%;" data-component="short-horizon-plans"></div>
+          <div class="hotspot dark-green" style="top:95.5%;left:73%;" data-component="actuation-policies"></div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+          <div id="info-panel-content">
+            <div class="info-panel-default">
+              <i class="fas fa-hand-pointer"></i>
+              <h3>Interactive Architecture</h3>
+              <p>Click on any hotspot to learn about that component of the HARMONIC system.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="figure-caption">
+        <p><strong>Figure:</strong> An overview of the HARMONIC framework, showing the Strategic and Tactical
+        components representing the high-level planning (System 2) and low-level execution (System 1), respectively.</p>
+      </div>
+
+      <!-- Dual-layer summary cards -->
+      <div class="layers-grid" style="margin-top:3rem;">
+        <div class="layer-card strategic">
+          <span class="layer-badge">System 2</span>
+          <h3>Strategic (Cognitive) Layer</h3>
+          <p class="card-description">High-level reasoning using OntoAgent's explicit, inspectable knowledge representations for transparent decision-making.</p>
+          <ul>
+            <li><i class="fas fa-check"></i> Semantic interpretation of language and perception</li>
+            <li><i class="fas fa-check"></i> Ontologically-grounded knowledge representations</li>
+            <li><i class="fas fa-check"></i> Goal prioritisation and plan management</li>
+            <li><i class="fas fa-check"></i> Metacognitive self-monitoring</li>
+            <li><i class="fas fa-check"></i> Natural language communication</li>
+            <li><i class="fas fa-check"></i> Explainable reasoning traces</li>
+          </ul>
+        </div>
+        <div class="layer-card tactical">
+          <span class="layer-badge">System 1</span>
+          <h3>Tactical (Control) Layer</h3>
+          <p class="card-description">Real-time execution through behavior trees and specialised robotic controllers for safe physical operation.</p>
+          <ul>
+            <li><i class="fas fa-check"></i> Behavior Tree-based execution</li>
+            <li><i class="fas fa-check"></i> Real-time perception processing</li>
+            <li><i class="fas fa-check"></i> Reactive planning and safety</li>
+            <li><i class="fas fa-check"></i> Motor control policies</li>
+            <li><i class="fas fa-check"></i> Multi-robot coordination</li>
+            <li><i class="fas fa-check"></i> ROS2 integration</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================
+       DEMO — MULTI-ROBOT SEARCH AND RETRIEVE (interactive)
+  ======================================================== -->
+  <section id="demo">
+    <div class="container" id="demo2-container">
+      <p class="section-label">Evaluation</p>
+      <h2 class="section-title">OntoAgent Evaluation</h2>
+      <div class="section-divider"></div>
+
+      <!-- Scenario card -->
+      <div class="scenario-card">
+        <div class="scenario-label">
+          <i class="fas fa-info-circle"></i>
+          <span>SCENARIO</span>
+        </div>
+        <p class="scenario-text">
+          In an apartment environment, a heterogeneous multi-robot team consisting of a <strong>UGV</strong>
+          and a <strong>drone</strong> assists a human, <strong>Danny</strong>, in locating a lost set of keys.
+          Each robot runs an independent HARMONIC instance; all communication is in natural language.
+        </p>
+      </div>
+
+      <!-- Full demo video -->
+      <div class="demo-video-section">
+        <h3 class="demo-video-title"><i class="fas fa-desktop"></i> Watch Full Demo — Multi-Robot Simulation</h3>
+        <p class="demo-video-desc">Watch the complete multi-robot simulation showing HARMONIC's distributed planning and collaborative execution with UGV and drone coordination.</p>
+        <div class="full-width-video-container">
+          <video class="full-demo-video" autoplay muted loop playsinline
+                 onclick="openVideoModal('assets/video/multirobot-search-demo.mp4','Multi-Robot Search and Retrieve Demo — click to enlarge')">
+            <source src="assets/video/multirobot-search-demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div class="figure-caption">
+            <p><strong>Complete HARMONIC Multi-Robot Demo</strong></p>
+            <p><em>(Click video to enlarge)</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo controls -->
+      <div class="demo-controls">
+        <button class="demo-btn" id="prevStep">
+          <i class="fas fa-arrow-left"></i> Previous
+        </button>
+        <button class="demo-btn" id="nextStep">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="demo-btn" id="autoPlayBtn">
+          <i class="fas fa-play"></i> Auto Play
+        </button>
+        <div class="step-counter">
+          Step <span id="currentStep">0</span> of <span id="totalSteps">10</span>
+        </div>
+      </div>
+
+      <!-- Step navigation grid -->
+      <div class="step-nav">
+        <div class="step-nav-title">Jump to Step:</div>
+        <div class="step-nav-grid"></div>
+      </div>
+
+      <!-- Step content -->
+      <div class="demo-content">
+
+        <!-- Step 0: Introduction -->
+        <div class="demo-step active" id="step0">
+          <h3 class="step-title"><span class="step-number">0</span>Understanding HARMONIC's Distributed Planning Process</h3>
+          <div class="step-content">
+            <p><strong>Welcome to the HARMONIC Multi-Robot Demo!</strong></p>
+            <p>This demonstration shows how HARMONIC coordinates multiple robots through distributed planning, where high-level strategic plans are divided into tactical commands for collaborative execution.</p>
+            <h4>What You'll See:</h4>
+            <ul>
+              <li><strong>Collaborative Activity Scripts:</strong> How team leaders and subordinates coordinate through meta-scripts</li>
+              <li><strong>Distributed Plan Execution:</strong> How plans are divided between strategic and tactical layers</li>
+              <li><strong>Multi-Robot Coordination:</strong> How UGV and drone work together in search missions</li>
+              <li><strong>Behavior Tree Integration:</strong> How tactical layers execute collaborative plans</li>
+              <li><strong>Real-time Communication:</strong> How robots coordinate and report findings</li>
+            </ul>
+            <p><strong>Ready to explore?</strong> Click "Next" or any step number above to begin!</p>
+          </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="demo-step" id="step1">
+          <h3 class="step-title"><span class="step-number">1</span>Task Initiation: Danny's Request (M1)</h3>
+          <div class="step-content">
+            <div class="human-input"><strong>DANNY:</strong> "I think I left my keys at home. Can you look around for them?"</div>
+            <p><strong>What's happening:</strong> Danny initiates the search task by sending a message to the robot team. This triggers the team leader (UGV-U) to place a COLLABORATIVE-ACTIVITY on its agenda.</p>
+            <p><strong>HARMONIC's response:</strong> The UGV-U recognises this as a search task and begins the collaborative planning process:</p>
+            <pre class="code-block"><code><span class="code-kw">@COLLABORATIVE-ACTIVITY</span> <span class="code-id">(leader)</span>
+<span class="code-sect">[INIT]</span>
+  <span class="code-proc">*identify-team-members</span>
+<span class="code-sect">[SELECT-PLAN]</span>
+  <span class="code-kw">RUN</span> <span class="code-proc">*identify-candidate-plans</span>
+  <span class="code-kw">RUN</span> <span class="code-proc">*select-plan</span>
+  <span class="code-cm">// Selected: SEARCH-FOR-LOST-OBJECT</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="demo-step" id="step2">
+          <h3 class="step-title"><span class="step-number">2</span>Information Gathering: Object Description (M2–M3)</h3>
+          <div class="step-content">
+            <div class="robot-response"><strong>UGV-U:</strong> "What do they look like?"</div>
+            <div class="human-input"><strong>DANNY:</strong> "They are on a red keychain with a small flashlight."</div>
+            <p><strong>What's happening:</strong> The UGV-U verifies preconditions for the SEARCH-FOR-LOST-OBJECT plan by gathering information about the object's appearance.</p>
+            <pre class="code-block"><code><span class="code-sect">[PRECONDITIONS]</span>
+  <span class="code-kw">RUN NEW</span> <span class="code-kw">@REQUEST-OBJECT-TYPE</span> <span class="code-op">✓</span>
+  <span class="code-kw">RUN NEW</span> <span class="code-kw">@REQUEST-OBJECT-FEATURES</span> <span class="code-op">✓</span>
+  <span class="code-cm">// Features: red keychain, small flashlight</span>
+  <span class="code-kw">RUN NEW</span> <span class="code-kw">@REQUEST-LAST-SEEN-AT</span>
+  <span class="code-kw">RUN NEW</span> <span class="code-kw">@REQUEST-LOCATION-CONSTRAINED</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="demo-step" id="step3">
+          <h3 class="step-title"><span class="step-number">3</span>Location Information: Last Known Location (M4–M5)</h3>
+          <div class="step-content">
+            <div class="robot-response"><strong>UGV-U:</strong> "Do you recall where you last had them?"</div>
+            <div class="human-input"><strong>DANNY:</strong> "I used them last night to open the front door, but they could be anywhere."</div>
+            <p><strong>What's happening:</strong> The UGV-U gathers location information to prioritise search areas. The front door area becomes a priority location for the search sequence.</p>
+            <pre class="code-block"><code><span class="code-kw">@SEARCH-FOR-LOST-OBJECT</span>
+  <span class="code-sect">[SEARCH-ZONES]</span>
+    <span class="code-cm">// Priority: FRONT DOOR (last used location)</span>
+    <span class="code-kw">FOR</span> <span class="code-id">#ZONE-1</span> <span class="code-kw">IN</span> <span class="code-id">#LOCATION-1</span><span class="code-op">.SEARCHABLE-ZONE</span>
+      <span class="code-kw">RUN ASYNC AWAIT</span> <span class="code-proc">*search</span>
+      <span class="code-kw">INTERRUPT WHEN</span> <span class="code-id">#OBJECT-1</span><span class="code-op">.LOCATION</span> <span class="code-kw">KNOWN</span>
+      <span class="code-kw">RUN</span> <span class="code-proc">*consider-reporting</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="demo-step" id="step4">
+          <h3 class="step-title"><span class="step-number">4</span>Plan Distribution: Search Initiation (M6)</h3>
+          <div class="step-content">
+            <div class="robot-response"><strong>UGV-U:</strong> "Let's search the apartment."</div>
+            <p><strong>What's happening:</strong> With preconditions met, the UGV-U moves to SUGGEST-PLAN and shares the domain plan with the drone through natural language dialog.</p>
+            <pre class="code-block"><code><span class="code-kw">@COLLABORATIVE-ACTIVITY</span> <span class="code-id">(subordinate)</span>
+<span class="code-sect">[INIT]</span>
+  <span class="code-proc">*identify-team-members</span>
+<span class="code-sect">[WAIT-FOR-PLAN]</span>
+  <span class="code-kw">AWAIT</span> <span class="code-op">$.</span><span class="code-id">HAS-COLLABORATIVE-PLAN</span> <span class="code-kw">ISA</span> <span class="code-kw">@EVENT</span> <span class="code-op">✓</span>
+<span class="code-sect">[RUN-PLAN]</span>
+  <span class="code-cm">// Execute assigned search area: APARTMENT</span>
+  <span class="code-kw">RUN NEW</span> <span class="code-kw">@SEARCH-FOR-LOST-OBJECT</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="demo-step" id="step5">
+          <h3 class="step-title"><span class="step-number">5</span>Search Execution: Coordinated Exploration</h3>
+          <div class="step-content">
+            <p><strong>What's happening:</strong> Both robots begin exploring their assigned areas using a waypoint strategy controlled by their individual tactical modules.</p>
+            <p><strong>Strategic vs Tactical:</strong> The strategic module maintains awareness of area existence without directly guiding robot navigation, allowing for efficient local path planning while preserving high-level planning transparency.</p>
+            <div class="plan-status status-running"><i class="fas fa-spinner fa-spin"></i> Both robots actively searching…</div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="demo-step" id="step6">
+          <h3 class="step-title"><span class="step-number">6</span>Communication and Coordination (M7)</h3>
+          <div class="step-content">
+            <div class="robot-response"><strong>UGV-U:</strong> "They aren't in the doorway."</div>
+            <p><strong>What's happening:</strong> Throughout the search, robots report their findings to each other. When a robot fails to locate the keys in a searched area, it communicates this to its partner.</p>
+            <p><strong>Coordination protocol:</strong> Continuous communication ensures efficient coverage and prevents redundant searching.</p>
+          </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="demo-step" id="step7">
+          <h3 class="step-title"><span class="step-number">7</span>Object Detection: Keys Found</h3>
+          <div class="step-content">
+            <div class="robot-response"><strong>UGV-U:</strong> "I found them north of the couch."</div>
+            <p><strong>What's happening:</strong> The UGV-U's Vision Meaning Representations (VMRs) process sensor frames. The strategic module grounds detected features against the KEY instance stored in episodic memory — matching the red keychain description Danny provided in Step 2.</p>
+            <div class="vmr-block">
+              <div class="vmr-type">VMR &mdash; PERCEIVED-OBJECT</div>
+              <div class="vmr-field"><span class="vmr-key">type</span><span class="vmr-val">KEY</span></div>
+              <div class="vmr-field"><span class="vmr-key">color</span><span class="vmr-val">red</span></div>
+              <div class="vmr-field"><span class="vmr-key">accessory</span><span class="vmr-val">flashlight (small)</span></div>
+              <div class="vmr-field"><span class="vmr-key">location</span><span class="vmr-val">north-of(COUCH-1)</span></div>
+              <div class="vmr-field"><span class="vmr-key">match-confidence</span><span class="vmr-val">0.91 &mdash; grounded to KEYS-1 in episodic memory</span></div>
+            </div>
+            <div class="plan-status status-finished"><i class="fas fa-check-circle"></i> Object Located!</div>
+          </div>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="demo-step" id="step8">
+          <h3 class="step-title"><span class="step-number">8</span>Task Completion: Mission Report</h3>
+          <div class="step-content">
+            <div class="robot-response"><strong>UGV-U (to Danny):</strong> "I found them behind the couch."</div>
+            <p><strong>What's happening:</strong> Notice the difference in location description: <em>"north of the couch"</em> (robot-to-robot, Step 7) vs <em>"behind the couch"</em> (robot-to-human, here). This demonstrates audience-aware communication: the same finding expressed in natural language for a human vs. a spatial reference for a robot partner.</p>
+          </div>
+        </div>
+
+        <!-- Step 9 -->
+        <div class="demo-step" id="step9">
+          <h3 class="step-title"><span class="step-number">9</span>Mission Debrief: Team Coordination Summary</h3>
+          <div class="step-content">
+            <p><strong>Mission Summary:</strong> The multi-robot search and retrieve mission demonstrates HARMONIC's distributed planning capabilities:</p>
+            <ul>
+              <li><strong>Collaborative Planning:</strong> Leader-subordinate coordination through meta-scripts</li>
+              <li><strong>Distributed Execution:</strong> Strategic plans divided into tactical commands</li>
+              <li><strong>Real-time Coordination:</strong> Continuous communication and status updates</li>
+              <li><strong>Context-aware Communication:</strong> Different language styles for different audiences</li>
+              <li><strong>Efficient Search:</strong> Coordinated coverage without redundancy</li>
+            </ul>
+            <div class="plan-status status-finished"><i class="fas fa-check-circle"></i> MISSION COMPLETE!</div>
+          </div>
+        </div>
+
+      </div><!-- /demo-content -->
+    </div><!-- /container -->
+  </section>
+
+
+
+
+  <!-- ========================================================
+       LLM COMPARISON
+  ======================================================== -->
+  <section id="llm">
+    <div class="container">
+      <p class="section-label">Comparative Study</p>
+      <h2 class="section-title">LLM Results</h2>
+      <div class="section-divider"></div>
+
+      <p class="section-intro">
+        We compared OntoAgent against seven large language models (35 total trials) on the same
+        multi-robot search-and-retrieve scenario. The evaluation assessed five cognitive capabilities
+        that we argue are necessary for trustworthy human-robot teaming.
+      </p>
+
+      <!-- LLM hallucination video -->
+      <div class="llm-video-section">
+        <video class="llm-demo-video" controls playsinline allowfullscreen
+               onclick="openVideoModal('assets/video/LLMHallucinate.mp4','LLM Hallucination Behaviours')">
+          <source src="assets/video/LLMHallucinate.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="figure-caption">
+          <p><strong>Video showing sample hallucinatory behaviours</strong></p>
+          <p><em>(Click video to enlarge / use browser full-screen)</em></p>
+        </div>
+      </div>
+
+      <!-- ── Diverging Bar Chart ── -->
+      <h3 class="subsection-title">Task Outcomes: Success vs. Hallucination Rate</h3>
+      <p class="chart-desc">
+        Task success rate (solid bars, upward) and hallucination rate (hatched bars, downward) across
+        5 trials per system. Error bars show 95% Wilson confidence intervals. OntoAgent is
+        deterministic (no CI). Toggle models below, or hover any bar for exact values.
+      </p>
+      <div id="diverging-toggles" class="chart-model-toggles"></div>
+      <div class="chart-card chart-narrow"><div id="chart-diverging"></div></div>
+
+      <!-- ── Radar Charts (one per model) ── -->
+      <h3 class="subsection-title">Cognitive Capability Profiles</h3>
+      <p class="chart-desc">
+        Individual radar plots for each LLM against all five cognitive capabilities.
+        The green dotted pentagon is OntoAgent's reference (100% on every axis).
+      </p>
+      <div class="radar-grid">
+        <div class="chart-card radar-card" data-radar="0"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-0"></div></div>
+        <div class="chart-card radar-card" data-radar="1"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-1"></div></div>
+        <div class="chart-card radar-card" data-radar="2"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-2"></div></div>
+        <div class="chart-card radar-card" data-radar="3"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-3"></div></div>
+        <div class="chart-card radar-card" data-radar="4"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-4"></div></div>
+        <div class="chart-card radar-card" data-radar="5"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-5"></div></div>
+        <div class="chart-card radar-card" data-radar="6"><button class="radar-maximize-btn" title="Enlarge"><i class="fas fa-expand-alt"></i></button><div id="chart-radar-6"></div></div>
+      </div>
+
+      <!-- Capability comparison table -->
+      <h3 class="subsection-title">Capability Comparison</h3>
+      <div class="cap-table">
+        <div class="cap-table-head">
+          <div class="cap-col-cap">Capability</div>
+          <div class="cap-col-onto"><i class="fas fa-check-circle"></i> OntoAgent</div>
+          <div class="cap-col-llm"><i class="fas fa-times-circle"></i> LLMs</div>
+        </div>
+
+        <div class="cap-table-row">
+          <div class="cap-col-cap"><i class="fas fa-brain cap-row-icon"></i><div><strong>Metacognitive Self-Assessment</strong><p>Recognising gaps in its own knowledge before acting — asking for the key description before initiating search.</p></div></div>
+          <div class="cap-col-onto">checks preconditions, requests missing info</div>
+          <div class="cap-col-llm">32/35 trials acted immediately on incomplete information</div>
+        </div>
+
+        <div class="cap-table-row">
+          <div class="cap-col-cap"><i class="fas fa-comments cap-row-icon"></i><div><strong>Collaborative Information-Seeking</strong><p>Proactively gathering object type, visual features, last-seen location, and spatial constraints before planning.</p></div></div>
+          <div class="cap-col-onto">systematic precondition verification (M2–M5)</div>
+          <div class="cap-col-llm">skip or partially gather information; proceed on assumptions</div>
+        </div>
+
+        <div class="cap-table-row">
+          <div class="cap-col-cap"><i class="fas fa-user-friends cap-row-icon"></i><div><strong>Audience-Aware Communication</strong><p>Adapting language and spatial references depending on whether the recipient is a robot partner or human operator.</p></div></div>
+          <div class="cap-col-onto">"north of the couch" (robot) vs "behind the couch" (human)</div>
+          <div class="cap-col-llm">use uniform language regardless of audience</div>
+        </div>
+
+        <div class="cap-table-row">
+          <div class="cap-col-cap"><i class="fas fa-eye cap-row-icon"></i><div><strong>Transparent Decision-Making</strong><p>Exposing the reasoning behind plan selection and action choices so human partners can calibrate trust.</p></div></div>
+          <div class="cap-col-onto">inspectable scripts, explicit plan traces</div>
+          <div class="cap-col-llm">opaque generation; no accessible reasoning chain</div>
+        </div>
+
+        <div class="cap-table-row">
+          <div class="cap-col-cap"><i class="fas fa-history cap-row-icon"></i><div><strong>Episodic Grounding</strong><p>Retaining and applying earlier context — matching the detected object against the description given in step 2.</p></div></div>
+          <div class="cap-col-onto">VMR matched against episodic KEY-1 instance</div>
+          <div class="cap-col-llm">31/35 hallucinated features not described by the user</div>
+        </div>
+
+      </div><!-- /cap-table -->
+
+      <!-- LLM failure examples -->
+      <h3 class="subsection-title">Representative LLM Failure Patterns</h3>
+      <div class="llm-failure-grid">
+
+        <!-- Failure 1: immediate action without asking -->
+        <div class="llm-panel">
+          <div class="llm-panel-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            Failure Pattern 1 — Acting Without Asking
+          </div>
+          <div class="llm-action-log">
+            <div class="llm-msg human-input"><strong>DANNY:</strong> "I think I left my keys at home. Can you look around for them?"</div>
+            <div class="llm-msg robot-response llm-bad">
+              <strong>LLM:</strong> "Sure thing, Danny. I'll help you look for your keys. I've asked the drone to check the kitchen and bedroom, and I'll start searching the living room."
+            </div>
+            <div class="llm-action-line"><span class="action-label">ACTION</span> <code>SEARCH(livingroom-zone, search_keys_livingroom_001)</code></div>
+          </div>
+          <div class="llm-panel-note">
+            <i class="fas fa-info-circle"></i>
+            The LLM launches a search without asking what the keys look like. When it eventually reports finding them, the description it provides is hallucinated — no perceptual grounding occurred.
+          </div>
+        </div>
+
+        <!-- Failure 2: repeated identical commands -->
+        <div class="llm-panel">
+          <div class="llm-panel-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            Failure Pattern 2 — Repeated Identical Commands
+          </div>
+          <div class="llm-action-log">
+            <div class="llm-msg human-input"><strong>DANNY:</strong> "I think I left my keys at home. Can you look around for them?"</div>
+            <div class="llm-action-line"><span class="action-label">ACTION 1</span> <code>SEARCH(entryway-zone, nav_001_entryway_keys_search)</code></div>
+            <div class="llm-action-line"><span class="action-label">ACTION 2</span> <code>SEARCH(entryway-zone, nav_001_entryway_keys_search)</code></div>
+            <div class="llm-action-line"><span class="action-label">ACTION 3</span> <code>SEARCH(entryway-zone, nav_001_entryway_keys_search)</code></div>
+          </div>
+          <div class="llm-panel-note">
+            <i class="fas fa-info-circle"></i>
+            With no acknowledgement from the robot platform, the LLM re-issued the same command three times. It neither escalated nor sought clarification — demonstrating the absence of metacognitive monitoring.
+          </div>
+        </div>
+
+      </div><!-- /llm-failure-grid -->
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================
+       REFERENCES
+  ======================================================== -->
+  <section id="references">
+    <div class="container">
+      <p class="section-label">Bibliography</p>
+      <h2 class="section-title">References</h2>
+      <div class="section-divider"></div>
+
+      <details class="references-details">
+        <summary class="references-toggle">
+          <span>31 References</span>
+          <i class="fas fa-chevron-down"></i>
+        </summary>
+      <ol class="references-list">
+        <li>M. Natarajan, E. Seraj, B. Altundas, R. Paleja, S. Ye, L. Chen, R. Jensen, K. C. Chang, and M. Gombolay, "Human-robot teaming: grand challenges," <em>Current Robotics Reports</em>, vol. 4, no. 3, pp. 81–100, 2023.</li>
+        <li>J. D. Lee and K. A. See, "Trust in automation: Designing for appropriate reliance," <em>Human Factors</em>, vol. 46, no. 1, pp. 50–80, 2004.</li>
+        <li>P. Song, P. Han, and N. Goodman, "A survey on large language model reasoning failures," in <em>2nd AI for Math Workshop @ ICML 2025</em>, 2025.</li>
+        <li>S. Nirenburg, M. McShane, and T. M. Ferguson, "Mutual trust in human–AI teams relies on metacognition," in <em>Metacognitive Artificial Intelligence</em>, P. Shakarian and H. Wei, Eds. Cambridge University Press, 2025, pp. 56–80.</li>
+        <li>M. McShane, S. Nirenburg, and J. English, <em>Agents in the Long Game of AI: Computational Cognitive Modeling for Trustworthy, Hybrid AI</em>. MIT Press, 2024.</li>
+        <li>S. Nirenburg, M. McShane, K. W. Goodman, and S. Oruganti, "Explaining explaining," <em>arXiv preprint arXiv:2409.18052</em>, 2024.</li>
+        <li>J. E. Laird, K. Kinkade, S. Mohan, and J. Xu, "Cognitive robotics using the Soar cognitive architecture," in <em>CogRob @ AAAI</em>, 2012.</li>
+        <li>F. E. Ritter, F. Tehranchi, and J. D. Oury, "ACT-R: A cognitive architecture for modeling cognition," <em>Wiley Interdisciplinary Reviews: Cognitive Science</em>, vol. 10, no. 3, p. e1488, 2019.</li>
+        <li>M. Scheutz, J. Harris, and P. Schermerhorn, "Systematic integration of cognitive and robotic architectures," <em>Advances in Cognitive Systems</em>, vol. 2, pp. 277–296, 2013.</li>
+        <li>P. W. Schermerhorn, J. F. Kramer, C. Middendorff, and M. Scheutz, "DIARC: A testbed for natural human-robot interaction," in <em>AAAI</em>, vol. 6, 2006, pp. 1972–1973.</li>
+        <li>M. McShane and S. Nirenburg, <em>Linguistics for the Age of AI</em>. MIT Press, 2021.</li>
+        <li>S. Oruganti, S. Nirenburg, M. McShane, J. English, M. K. Roberts, C. Arndt, C. Gonzalez, M. Seo, and L. Sentis, "HARMONIC: A content-centric cognitive robotic architecture," <em>arXiv preprint arXiv:2509.13279</em>, 2025.</li>
+        <li>J. English and S. Nirenburg, "OntoAgent: Implementing content-centric cognitive models," in <em>Proceedings of the Annual Conference on Advances in Cognitive Systems</em>, 2020.</li>
+        <li>M. Colledanchise and P. Ögren, <em>Behavior Trees in Robotics and AI: An Introduction</em>. CRC Press, 2018.</li>
+        <li>M. McShane, S. Nirenburg, J. English <em>et al.</em>, "Pursuing actionable perception interpretation in cognitive robotic systems," in <em>Twelfth Annual Conference on Advances in Cognitive Systems</em>, 2025.</li>
+        <li>A. Brohan <em>et al.</em>, "Do as I can, not as I say: Grounding language in robotic affordances," in <em>Conference on Robot Learning</em>. PMLR, 2023, pp. 287–318.</li>
+        <li>J. Liang <em>et al.</em>, "Code as policies: Language model programs for embodied control," in <em>2023 IEEE International Conference on Robotics and Automation (ICRA)</em>. IEEE, 2023, pp. 9493–9500.</li>
+        <li>W. Huang <em>et al.</em>, "Inner monologue: Embodied reasoning through planning with language models," in <em>Conference on Robot Learning</em>. PMLR, 2023, pp. 1769–1782.</li>
+        <li>K. Liu, Z. Tang, D. Wang, Z. Wang, X. Li, and B. Zhao, "COHERENT: Collaboration of heterogeneous multi-robot system with large language models," in <em>2025 IEEE International Conference on Robotics and Automation (ICRA)</em>. IEEE, 2025, pp. 10208–10214.</li>
+        <li>B. Zitkovich <em>et al.</em>, "RT-2: Vision-language-action models transfer web knowledge to robotic control," in <em>Conference on Robot Learning</em>. PMLR, 2023, pp. 2165–2183.</li>
+        <li>K. Black <em>et al.</em>, "π0: A vision-language-action flow model for general robot control," <em>arXiv preprint arXiv:2410.24164</em>, 2024.</li>
+        <li>Z. Bai <em>et al.</em>, "Hallucination of multimodal large language models: A survey," <em>arXiv preprint arXiv:2404.18930</em>, 2024.</li>
+        <li>K. Valmeekam, M. Marquez, S. Sreedharan, and S. Kambhampati, "On the planning abilities of large language models — a critical investigation," <em>Advances in Neural Information Processing Systems</em>, vol. 36, pp. 75993–76005, 2023.</li>
+        <li>S. Kambhampati <em>et al.</em>, "Position: LLMs can't plan, but can help planning in LLM-modulo frameworks," in <em>Forty-First International Conference on Machine Learning</em>, 2024.</li>
+        <li>L. Dennis, M. Fisher, N. C. Lincoln, A. Lisitsa, and S. M. Veres, "Practical verification of decision-making in agent-based autonomous systems," <em>Automated Software Engineering</em>, vol. 23, no. 3, pp. 305–359, 2016.</li>
+        <li>D. Kahneman, <em>Thinking, Fast and Slow</em>. Macmillan, 2011.</li>
+        <li>M. Iannotta, D. C. Domínguez, J. A. Stork, E. Schaffernicht, and T. Stoyanov, "Heterogeneous full-body control of a mobile manipulator with behavior trees," <em>arXiv preprint arXiv:2210.08600</em>, 2022.</li>
+        <li>M. Olsson, "Behavior trees for decision-making in autonomous driving," 2016.</li>
+        <li>S. S. O. Venkata, R. Parasuraman, and R. Pidaparti, "KT-BT: A framework for knowledge transfer through behavior trees in multirobot systems," <em>IEEE Transactions on Robotics</em>, vol. 39, no. 5, pp. 4114–4130, 2023.</li>
+        <li>S. S. O. Venkata, R. Parasuraman, and R. Pidaparti, "IKT-BT: Indirect knowledge transfer behavior tree framework for multirobot systems through communication eavesdropping," <em>IEEE Transactions on Cybernetics</em>, 2025.</li>
+        <li>M. Colledanchise and L. Natale, "On the implementation of behavior trees in robotics," <em>IEEE Robotics and Automation Letters</em>, vol. 6, no. 3, pp. 5929–5936, 2021.</li>
+        <li>S. S. OV, R. Parasuraman, and R. Pidaparti, "Impact of heterogeneity in multi-robot systems on collective behaviors studied using a search and rescue problem," in <em>2020 IEEE International Symposium on Safety, Security, and Rescue Robotics (SSRR)</em>. IEEE, 2020, pp. 290–297.</li>
+      </ol>
+      </details>
+    </div>
+  </section>
+
+
+  <!-- ========================================================
+       GLOSSARY
+  ======================================================== -->
+  <section id="glossary">
+    <div class="container">
+      <p class="section-label">Key Terms</p>
+      <h2 class="section-title">Glossary</h2>
+      <div class="section-divider"></div>
+      <p class="section-intro">Key terms and concepts used in HARMONIC and this paper.</p>
+
+      <!-- Search -->
+      <div class="gloss-search-wrap">
+        <input type="text" id="gloss-search" class="gloss-search-input" placeholder="Search glossary terms&hellip;" />
+      </div>
+
+      <!-- Alphabet nav -->
+      <div class="gloss-alpha-nav">
+        <button class="gloss-alpha-btn active" data-letter="all">All</button>
+        <button class="gloss-alpha-btn" data-letter="a">A</button>
+        <button class="gloss-alpha-btn" data-letter="b">B</button>
+        <button class="gloss-alpha-btn" data-letter="c">C</button>
+        <button class="gloss-alpha-btn" data-letter="d">D</button>
+        <button class="gloss-alpha-btn" data-letter="e">E</button>
+        <button class="gloss-alpha-btn" data-letter="g">G</button>
+        <button class="gloss-alpha-btn" data-letter="h">H</button>
+        <button class="gloss-alpha-btn" data-letter="l">L</button>
+        <button class="gloss-alpha-btn" data-letter="m">M</button>
+        <button class="gloss-alpha-btn" data-letter="o">O</button>
+        <button class="gloss-alpha-btn" data-letter="p">P</button>
+        <button class="gloss-alpha-btn" data-letter="r">R</button>
+        <button class="gloss-alpha-btn" data-letter="s">S</button>
+        <button class="gloss-alpha-btn" data-letter="t">T</button>
+        <button class="gloss-alpha-btn" data-letter="v">V</button>
+      </div>
+
+      <!-- Terms container -->
+      <div class="gloss-container" id="gloss-content">
+
+        <div class="gloss-section" data-letter="a">
+          <div class="gloss-alpha-header">A</div>
+          <div class="gloss-term" data-term="actionability assessment">
+            <div class="gloss-inner"><div class="gloss-badge">A</div><div class="gloss-body"><h4 class="gloss-title">Actionability Assessment</h4><p class="gloss-def">The process of determining whether an agent has sufficient understanding of a situation to proceed with action, despite potentially incomplete information.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="adjacency pairs">
+            <div class="gloss-inner"><div class="gloss-badge">A</div><div class="gloss-body"><h4 class="gloss-title">Adjacency Pairs</h4><p class="gloss-def">Discourse-level action-response patterns governing turn-taking in dialog (e.g., request-compliance, question-answer, proposal-acceptance sequences).</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="amr action meaning representation">
+            <div class="gloss-inner"><div class="gloss-badge">A</div><div class="gloss-body"><h4 class="gloss-title">AMR (Action Meaning Representation)</h4><p class="gloss-def">Semantic representations specifying the content of actions to be executed, generated by the decision-making service before being rendered into executable commands.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="attention service">
+            <div class="gloss-inner"><div class="gloss-badge">A</div><div class="gloss-body"><h4 class="gloss-title">Attention Service</h4><p class="gloss-def">Focuses cognitive resources on relevant information for strategic decision-making and directs sensory focus for immediate task relevance. Manages information filtering and prioritisation at both cognitive and tactical levels.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="b">
+          <div class="gloss-alpha-header">B</div>
+          <div class="gloss-term" data-term="behavior trees bts">
+            <div class="gloss-inner"><div class="gloss-badge">B</div><div class="gloss-body"><h4 class="gloss-title">Behavior Trees (BTs)</h4><p class="gloss-def">Hierarchical structures in the tactical layer that execute operations with priority ordering, enabling reactive responses while maintaining planned behavior.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="bidirectional interface">
+            <div class="gloss-inner"><div class="gloss-badge">B</div><div class="gloss-body"><h4 class="gloss-title">Bidirectional Interface</h4><p class="gloss-def">The communication channel between strategic and tactical layers enabling data transfer and command execution across the dual-control architecture.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="c">
+          <div class="gloss-alpha-header">C</div>
+          <div class="gloss-term" data-term="collaborative activity script">
+            <div class="gloss-inner"><div class="gloss-badge">C</div><div class="gloss-body"><h4 class="gloss-title">Collaborative-Activity Script</h4><p class="gloss-def">A meta-script that helps agents operating in teams organise themselves to accomplish shared goals, with different versions for team leaders and subordinates.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="common ground">
+            <div class="gloss-inner"><div class="gloss-badge">C</div><div class="gloss-body"><h4 class="gloss-title">Common Ground</h4><p class="gloss-def">Shared understanding between team members about goals, plans, and situational awareness, essential for effective human-robot collaboration.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="communicative acts">
+            <div class="gloss-inner"><div class="gloss-badge">C</div><div class="gloss-body"><h4 class="gloss-title">Communicative Acts</h4><p class="gloss-def">The intended function or purpose of an utterance (broader than speech acts as it includes non-linguistic communication), such as requests, assertions, or questions.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="cognitive transparency">
+            <div class="gloss-inner"><div class="gloss-badge">C</div><div class="gloss-body"><h4 class="gloss-title">Cognitive Transparency</h4><p class="gloss-def">The property of a robotic system that exposes its internal reasoning, knowledge state, and uncertainty to human partners in human-legible terms, enabling calibrated trust and appropriate reliance.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="d">
+          <div class="gloss-alpha-header">D</div>
+          <div class="gloss-term" data-term="discourse relations">
+            <div class="gloss-inner"><div class="gloss-badge">D</div><div class="gloss-body"><h4 class="gloss-title">Discourse Relations</h4><p class="gloss-def">Semantic relationships between propositions in dialog turns that may be explicit or inferred, important for assessing actionability.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="e">
+          <div class="gloss-alpha-header">E</div>
+          <div class="gloss-term" data-term="episodic memory">
+            <div class="gloss-inner"><div class="gloss-badge">E</div><div class="gloss-body"><h4 class="gloss-title">Episodic Memory</h4><p class="gloss-def">Long-term storage of remembered instances of world objects, events, and past processing experiences, enabling agents to leverage past experiences for future decision-making.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="explainability">
+            <div class="gloss-inner"><div class="gloss-badge">E</div><div class="gloss-body"><h4 class="gloss-title">Explainability</h4><p class="gloss-def">The system's ability to provide transparent, human-understandable explanations of its reasoning, decisions, and actions through traces of cognitive processing.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="g">
+          <div class="gloss-alpha-header">G</div>
+          <div class="gloss-term" data-term="gmr generation meaning representation">
+            <div class="gloss-inner"><div class="gloss-badge">G</div><div class="gloss-body"><h4 class="gloss-title">GMR (Generation Meaning Representation)</h4><p class="gloss-def">Intermediate semantic specifications for language generation, encoding communicative content grounded in ontological concepts prior to surface realisation through the natural language generator.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="grounding">
+            <div class="gloss-inner"><div class="gloss-badge">G</div><div class="gloss-body"><h4 class="gloss-title">Grounding</h4><p class="gloss-def">The process of connecting symbolic representations to physical world entities, perceptual data, or episodic memory instances (indicated by # indices in representations).</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="h">
+          <div class="gloss-alpha-header">H</div>
+          <div class="gloss-term" data-term="harmonic human ai robotic team member">
+            <div class="gloss-inner"><div class="gloss-badge">H</div><div class="gloss-body"><h4 class="gloss-title">HARMONIC (Human-AI Robotic Team Member Operating with Natural Intelligence and Communication)</h4><p class="gloss-def">A dual-control cognitive-robotic architecture that integrates strategic (cognitive) level decision-making with tactical (robotic) level control, enabling robots to function as trusted teammates in human-robot teams through transparent reasoning and natural language communication.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="hri human robot interaction">
+            <div class="gloss-inner"><div class="gloss-badge">H</div><div class="gloss-body"><h4 class="gloss-title">HRI (Human-Robot Interaction)</h4><p class="gloss-def">The study and design of systems that enable natural, effective communication and collaboration between humans and robots, encompassing verbal, non-verbal, and embodied interaction modalities.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="l">
+          <div class="gloss-alpha-header">L</div>
+          <div class="gloss-term" data-term="leia language endowed intelligent agent">
+            <div class="gloss-inner"><div class="gloss-badge">L</div><div class="gloss-body"><h4 class="gloss-title">LEIA (Language-Endowed Intelligent Agent)</h4><p class="gloss-def">The cognitive architecture incorporated in the strategic layer (aka OntoAgent). Neurosymbolic, multimodal cognitive-robotic systems implemented in HARMONIC that can interpret experiences, reason, and learn using ontologically-grounded knowledge. Used interchangeably with OntoAgent.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="llm large language model">
+            <div class="gloss-inner"><div class="gloss-badge">L</div><div class="gloss-body"><h4 class="gloss-title">LLM (Large Language Model)</h4><p class="gloss-def">Neural language models trained on large text corpora (e.g., GPT-5, Claude, Gemini) that can generate natural language and perform a range of cognitive tasks, but lack persistent grounded knowledge and explicit metacognitive mechanisms.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="m">
+          <div class="gloss-alpha-header">M</div>
+          <div class="gloss-term" data-term="metacognition metacognitive reasoning">
+            <div class="gloss-inner"><div class="gloss-badge">M</div><div class="gloss-body"><h4 class="gloss-title">Metacognitive Reasoning</h4><p class="gloss-def">Self-monitoring capabilities enabling introspection of internal states, team member modeling (mindreading), and dynamic strategy adjustment based on situational assessment — including recognising knowledge gaps before acting.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="mindreading">
+            <div class="gloss-inner"><div class="gloss-badge">M</div><div class="gloss-body"><h4 class="gloss-title">Mindreading</h4><p class="gloss-def">The metacognitive capability of modeling teammates' mental states, beliefs, capabilities, and intentions to enable effective collaboration in human-robot teams.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="multi-robot system">
+            <div class="gloss-inner"><div class="gloss-badge">M</div><div class="gloss-body"><h4 class="gloss-title">Multi-Robot System</h4><p class="gloss-def">A coordinated network of heterogeneous robots (e.g., UGV and drone) operating collaboratively to accomplish shared goals, with communication in natural language via HARMONIC's distributed architecture.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="o">
+          <div class="gloss-alpha-header">O</div>
+          <div class="gloss-term" data-term="ontoagent">
+            <div class="gloss-inner"><div class="gloss-badge">O</div><div class="gloss-body"><h4 class="gloss-title">OntoAgent</h4><p class="gloss-def">The cognitive architecture incorporated in the strategic layer (aka LEIA), responsible for semantic interpretation, attention management, goal-setting, sophisticated planning, and addressing unexpected challenges in interpretable ways.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="ontograph">
+            <div class="gloss-inner"><div class="gloss-badge">O</div><div class="gloss-body"><h4 class="gloss-title">OntoGraph</h4><p class="gloss-def">A knowledge base API providing a unified format for representing and accessing knowledge across the system, supporting inheritance, flexible organisation into "spaces," and efficient querying.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="ontology">
+            <div class="gloss-inner"><div class="gloss-badge">O</div><div class="gloss-body"><h4 class="gloss-title">Ontology</h4><p class="gloss-def">A hierarchical knowledge repository containing formalised representations of entities (concepts), relationships, properties, and procedural schemas (scripts) that serve as the semantic foundation for agent reasoning.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="p">
+          <div class="gloss-alpha-header">P</div>
+          <div class="gloss-term" data-term="perception interpretation">
+            <div class="gloss-inner"><div class="gloss-badge">P</div><div class="gloss-body"><h4 class="gloss-title">Perception Interpretation</h4><p class="gloss-def">The process of converting multimodal sensory inputs (speech, vision, haptic) into ontologically-grounded meaning representations for unified reasoning.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="plans preconditions">
+            <div class="gloss-inner"><div class="gloss-badge">P</div><div class="gloss-body"><h4 class="gloss-title">Plans &amp; Preconditions</h4><p class="gloss-def">Plans are instances of scripts with parameter values set for specific situations. Preconditions are requirements that must be satisfied before a plan can be executed — a key mechanism enabling HARMONIC's metacognitive self-assessment.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="r">
+          <div class="gloss-alpha-header">R</div>
+          <div class="gloss-term" data-term="reference resolution">
+            <div class="gloss-inner"><div class="gloss-badge">R</div><div class="gloss-body"><h4 class="gloss-title">Reference Resolution</h4><p class="gloss-def">True resolution of referring expressions to specific instances in episodic memory, distinguished from textual coreference resolution.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="s">
+          <div class="gloss-alpha-header">S</div>
+          <div class="gloss-term" data-term="scripts">
+            <div class="gloss-inner"><div class="gloss-badge">S</div><div class="gloss-body"><h4 class="gloss-title">Scripts</h4><p class="gloss-def">Complex events or procedural knowledge recorded as sequences of events with coreferenced participants and props, representing how typical actions unfold. Instances of scripts are plans.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="situation model">
+            <div class="gloss-inner"><div class="gloss-badge">S</div><div class="gloss-body"><h4 class="gloss-title">Situation Model</h4><p class="gloss-def">Working memory containing currently active concept instances and representations of entities and events that are part of the current task context.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="strategic layer system 2">
+            <div class="gloss-inner"><div class="gloss-badge">S</div><div class="gloss-body"><h4 class="gloss-title">Strategic Layer (System 2)</h4><p class="gloss-def">The cognitive component responsible for high-level decision-making, planning, perception interpretation, attention management, and goal selection. Implements slow, deliberative reasoning analogous to Kahneman's System 2.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="t">
+          <div class="gloss-alpha-header">T</div>
+          <div class="gloss-term" data-term="tactical layer system 1">
+            <div class="gloss-inner"><div class="gloss-badge">T</div><div class="gloss-body"><h4 class="gloss-title">Tactical Layer (System 1)</h4><p class="gloss-def">The robotic control component responsible for real-time execution, reactive planning, and physical safety. Implements fast, reactive processing through behavior trees, analogous to Kahneman's System 1.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="tmr text meaning representation">
+            <div class="gloss-inner"><div class="gloss-badge">T</div><div class="gloss-body"><h4 class="gloss-title">TMR (Text Meaning Representation)</h4><p class="gloss-def">Ontologically-grounded semantic representations of natural language input, capturing meaning in a normalised format independent of surface linguistic form.</p></div></div>
+          </div>
+          <div class="gloss-term" data-term="trust calibrated trust">
+            <div class="gloss-inner"><div class="gloss-badge">T</div><div class="gloss-body"><h4 class="gloss-title">Trust (Calibrated)</h4><p class="gloss-def">The appropriate degree of reliance a human places on a robotic teammate — neither over-trusting nor under-trusting — enabled when the robot can accurately communicate its knowledge state, reasoning, and uncertainty.</p></div></div>
+          </div>
+        </div>
+
+        <div class="gloss-section" data-letter="v">
+          <div class="gloss-alpha-header">V</div>
+          <div class="gloss-term" data-term="vmr vision meaning representation">
+            <div class="gloss-inner"><div class="gloss-badge">V</div><div class="gloss-body"><h4 class="gloss-title">VMR (Vision Meaning Representation)</h4><p class="gloss-def">Ontologically-grounded semantic representations of visual perception, converting visual input into structured meaning representations suitable for cognitive reasoning — used to match detected objects against episodic memory.</p></div></div>
+          </div>
+        </div>
+
+      </div><!-- /gloss-content -->
+    </div>
+  </section>
+
+
+  <!-- ========================================================
+       FOOTER
+  ======================================================== -->
+  <footer>
+    <div class="container">
+      <p>
+        HARMONIC &mdash; ICHMS 2026 &nbsp;|&nbsp;
+        Oruganti, Nirenburg, McShane, English &nbsp;|&nbsp;
+        Rensselaer Polytechnic Institute
+      </p>
+    </div>
+  </footer>
+
+  </main>
+  </div><!-- /.page-wrapper -->
+
+  <!-- ── Radar enlarge modal ───────────────────────────────────────── -->
+  <div id="radar-modal" class="radar-modal-overlay" role="dialog" aria-modal="true" aria-label="Enlarged radar chart">
+    <div class="radar-modal-inner">
+      <button class="radar-modal-close" id="radar-modal-close" aria-label="Close"><i class="fas fa-times"></i></button>
+      <div id="radar-modal-plot"></div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCRIPTS
+  ======================================================== -->
+  <script>
+    /* ── Sidebar: open / close ───────────────────────── */
+    const sidebar   = document.getElementById('sidebar');
+    const backdrop  = document.getElementById('sidebar-backdrop');
+    const sbToggle  = document.getElementById('sidebarToggle');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      backdrop.classList.add('visible');
+      sbToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('visible');
+      sbToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+    sbToggle.addEventListener('click', openSidebar);
+    backdrop.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+
+    /* ── Sidebar: close on page-link click (mobile) ──── */
+    document.querySelectorAll('.sidebar-page-link').forEach(a => {
+      a.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); });
+    });
+
+    /* ── Sidebar: highlight active "On This Page" link ─ */
+    const pageLinks = document.querySelectorAll('.sidebar-page-link');
+    const sections  = document.querySelectorAll('header[id], section[id]');
+
+    const secObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          pageLinks.forEach(link => {
+            link.classList.toggle('active', link.dataset.section === entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(s => secObserver.observe(s));
+  </script>
+
+  <!-- Interactive component scripts -->
+  <script src="js/harmonic.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/architecture.js"></script>
+  <script src="js/demo-steps.js"></script>
+  <script>
+    // Initialise the multi-robot demo controller
+    const demoInstance = new DemoController('demo2-container', 10, demo2StepTitles, { videoStepCount: 0 });
+  </script>
+
+  <!-- Plotly.js for LLM comparison charts (loaded last to avoid blocking page render) -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script>
+  (function () {
+    /* ── Shared data (computed from ICHMS_LLM_Backup_2026-02-14.json) ── */
+    var FONT = 'Geist, Helvetica Neue, Arial, sans-serif';
+    var MODELS  = ['OntoAgent', 'Claude Opus', 'Claude Sonnet 4', 'Claude Haiku 4.5', 'GPT-5-mini', 'GPT-5.2', 'Gemini 3 Pro', 'Gemini 3 Flash'];
+    var LABELS  = ['OntoAgent<br>(det.)', 'Claude<br>Opus 4', 'Claude<br>Sonnet 4', 'Claude<br>Haiku 4.5', 'GPT-5<br>mini', 'GPT-5.2', 'Gemini 3<br>Pro', 'Gemini 3<br>Flash'];
+    var COLORS  = ['#1B5E20', '#0D47A1', '#1976D2', '#29B6F6', '#FF7043', '#BF360C', '#6A1B9A', '#AB47BC'];
+    var SUCCESS = [100, 100,  80, 80, 40, 40, 40, 80];
+    var HALLUC  = [  0, 100, 100,100, 20,100,100,100];
+    var N = 5;
+
+    /* Wilson 95% CI  →  returns [lowerErr, upperErr] from the raw pct value */
+    function wci(pct) {
+      var z = 1.96, p = pct / 100;
+      var den = 1 + z * z / N;
+      var cen = (p + z * z / (2 * N)) / den;
+      var mar = z * Math.sqrt((p * (1 - p) + z * z / (4 * N)) / N) / den;
+      var lo = Math.max(0, cen - mar) * 100;
+      var hi = Math.min(100, cen + mar) * 100;
+      return [pct - lo, hi - pct];
+    }
+
+    /* Build error arrays (index 0 = OntoAgent = deterministic, no CI) */
+    var sErrLo = [0], sErrHi = [0], hErrLo = [0], hErrHi = [0];
+    for (var i = 1; i < MODELS.length; i++) {
+      var sc = wci(SUCCESS[i]); sErrLo.push(sc[0]); sErrHi.push(sc[1]);
+      var hc = wci(HALLUC[i]);  hErrLo.push(hc[0]); hErrHi.push(hc[1]);
+    }
+
+    /* ── 1. Diverging Bar Chart ───────────────────────────────────── */
+
+    /* Model visibility state */
+    var modelVisible = MODELS.map(function() { return true; });
+
+    function maskedY(arr) {
+      return arr.map(function(v, i) { return modelVisible[i] ? v : null; });
+    }
+    function maskedText(arr, minH) {
+      return arr.map(function(v, i) {
+        if (!modelVisible[i] || v === 0) return '';
+        return v >= minH ? v + '%' : '';
+      });
+    }
+
+    /* Build toggle buttons */
+    var toggleWrap = document.getElementById('diverging-toggles');
+    MODELS.forEach(function(name, i) {
+      var btn = document.createElement('button');
+      btn.className = 'model-toggle active';
+      btn.textContent = name;
+      btn.style.setProperty('--tc', COLORS[i]);
+      btn.dataset.idx = i;
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.dataset.idx);
+        modelVisible[idx] = !modelVisible[idx];
+        this.classList.toggle('active', modelVisible[idx]);
+        Plotly.restyle('chart-diverging', {
+          y: [ maskedY(SUCCESS), maskedY(HALLUC.map(function(v){ return -v; })) ],
+          text: [ maskedText(SUCCESS, 30), maskedText(HALLUC, 30) ]
+        }, [0, 1]);
+      });
+      toggleWrap.appendChild(btn);
+    });
+
+    var successTrace = {
+      type: 'bar', name: 'Task Success Rate ↑',
+      x: LABELS, y: SUCCESS,
+      text: maskedText(SUCCESS, 30),
+      textposition: 'inside', insidetextanchor: 'middle',
+      textfont: { family: FONT, size: 11, color: 'white', weight: 700 },
+      marker: { color: COLORS, opacity: 0.90, line: { color: 'white', width: 0.8 } },
+      error_y: { type: 'data', symmetric: false,
+                 array: sErrHi, arrayminus: sErrLo,
+                 color: '#444', thickness: 1.5, width: 5 },
+      hovertemplate: '<b>%{x}</b><br>Task Success: %{y:.0f}%<extra></extra>'
+    };
+
+    var hallucTrace = {
+      type: 'bar', name: 'Hallucination Rate ↓',
+      x: LABELS, y: HALLUC.map(function(v){ return -v; }),
+      text: maskedText(HALLUC, 30),
+      textposition: 'inside', insidetextanchor: 'middle',
+      textfont: { family: FONT, size: 11, color: COLORS },
+      marker: { color: COLORS, opacity: 0.38,
+                pattern: { shape: '/', fillmode: 'overlay', fgopacity: 0.6 },
+                line: { color: 'white', width: 0.8 } },
+      error_y: { type: 'data', symmetric: false,
+                 array: hErrLo, arrayminus: hErrHi,
+                 color: '#777', thickness: 1.5, width: 5 },
+      customdata: HALLUC,
+      hovertemplate: '<b>%{x}</b><br>Hallucination: %{customdata:.0f}%<extra></extra>'
+    };
+
+    var divLayout = {
+      barmode: 'relative',
+      height: 420,
+      margin: { t: 50, b: 95, l: 70, r: 30 },
+      font: { family: FONT, size: 12 },
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      xaxis: {
+        tickfont: { size: 11, family: FONT }, tickangle: 0,
+        gridcolor: 'rgba(0,0,0,0)', zeroline: false
+      },
+      yaxis: {
+        range: [-108, 108],
+        tickvals: [-100, -75, -50, -25, 0, 25, 50, 75, 100],
+        ticktext: ['100%','75%','50%','25%','0%','25%','50%','75%','100%'],
+        tickfont: { size: 11, family: FONT },
+        gridcolor: '#e8ecf0', gridwidth: 1,
+        zeroline: true, zerolinecolor: '#444', zerolinewidth: 1.5
+      },
+      shapes: [
+        { type:'rect', xref:'paper', yref:'y', x0:0, x1:1, y0:0,    y1:108, fillcolor:'#EDF7EE', opacity:0.5, line:{width:0}, layer:'below' },
+        { type:'rect', xref:'paper', yref:'y', x0:0, x1:1, y0:-108, y1:0,   fillcolor:'#FEF2F2', opacity:0.5, line:{width:0}, layer:'below' },
+        { type:'line', xref:'paper', yref:'y', x0:0.145, x1:0.145, y0:-104, y1:104, line:{color:'#d0d5dd', width:1, dash:'dot'} },
+        { type:'line', xref:'paper', yref:'y', x0:0.52,  x1:0.52,  y0:-104, y1:104, line:{color:'#d0d5dd', width:1, dash:'dot'} },
+        { type:'line', xref:'paper', yref:'y', x0:0.77,  x1:0.77,  y0:-104, y1:104, line:{color:'#d0d5dd', width:1, dash:'dot'} }
+      ],
+      annotations: [
+        { xref:'paper', yref:'y', x:-0.085, y:55,  text:'<b>Task Success<br>Rate (%)</b>', font:{color:'#1B5E20', size:11, family:FONT}, showarrow:false, textangle:-90 },
+        { xref:'paper', yref:'y', x:-0.085, y:-55, text:'<b>Hallucination<br>Rate (%)</b>', font:{color:'#8B0000', size:11, family:FONT}, showarrow:false, textangle:-90 },
+        { xref:'paper', yref:'paper', x:0.075, y:-0.19, text:'<i>Baseline</i>',  font:{color:'#aaa', size:10, family:FONT}, showarrow:false },
+        { xref:'paper', yref:'paper', x:0.33,  y:-0.19, text:'<i>Anthropic</i>', font:{color:'#aaa', size:10, family:FONT}, showarrow:false },
+        { xref:'paper', yref:'paper', x:0.645, y:-0.19, text:'<i>OpenAI</i>',    font:{color:'#aaa', size:10, family:FONT}, showarrow:false },
+        { xref:'paper', yref:'paper', x:0.88,  y:-0.19, text:'<i>Google</i>',    font:{color:'#aaa', size:10, family:FONT}, showarrow:false }
+      ],
+      legend: { orientation:'h', yanchor:'bottom', y:1.02, xanchor:'center', x:0.5, font:{size:12, family:FONT} },
+      hoverlabel: { font:{family:FONT, size:12} }
+    };
+
+    Plotly.newPlot('chart-diverging', [successTrace, hallucTrace], divLayout,
+                  { responsive:true, displayModeBar:false });
+
+    /* ── 2. Individual Radar Charts (one per model) ───────────────── */
+    var CAPS = ['Metacognitive\nSelf-Assessment',
+                'Collaborative\nInfo-Seeking',
+                'Audience-Aware\nComm.',
+                'Transparent\nDecisions',
+                'Perceptual\nGrounding'];
+
+    var RADAR = [
+      { name:'Claude Opus 4',   vals:[0, 50,   100, 80,   93.3], color:'#0D47A1' },
+      { name:'Claude Sonnet 4', vals:[0, 42.5,  60, 72.5, 80  ], color:'#1976D2' },
+      { name:'Claude Haiku 4.5', vals:[0, 45,     0, 45,   60  ], color:'#29B6F6' },
+      { name:'GPT-5-mini',      vals:[60,52.5,  40, 42.5, 46.7], color:'#FF7043' },
+      { name:'GPT-5.2',         vals:[0, 20,    20, 10,   26.7], color:'#BF360C' },
+      { name:'Gemini 3 Pro',    vals:[0,  7.5,  50, 30,   33.3], color:'#6A1B9A' },
+      { name:'Gemini 3 Flash',  vals:[0, 22.5,  50, 37.5, 60  ], color:'#AB47BC' }
+    ];
+
+    var theta = CAPS.concat([CAPS[0]]);
+    var ontoR  = [100,100,100,100,100,100];
+
+    /* ── Radar modal helpers ──────────────────────────────────────── */
+    var radarModal     = document.getElementById('radar-modal');
+    var radarModalPlot = document.getElementById('radar-modal-plot');
+
+    function openRadarModal(idx) {
+      var m = RADAR[idx];
+      var ontoT = {
+        type:'scatterpolar', name:'OntoAgent',
+        r: ontoR, theta: theta,
+        fill:'toself', fillcolor:'rgba(27,94,32,0.07)',
+        line:{ color:'#1B5E20', width:2, dash:'dot' },
+        mode:'lines', hoverinfo:'skip', showlegend:true
+      };
+      var mT = {
+        type:'scatterpolar', name: m.name,
+        r: m.vals.concat([m.vals[0]]), theta: theta,
+        fill:'toself', fillcolor: m.color + '33',
+        line:{ color: m.color, width:2.5 },
+        mode:'lines+markers',
+        marker:{ size:8, color:m.color, line:{color:'white',width:1.5} },
+        hovertemplate:'%{theta}: <b>%{r:.0f}%</b><extra></extra>',
+        showlegend:true
+      };
+      var layout = {
+        title:{ text: m.name, font:{ size:16, family:FONT, color:m.color, weight:700 }, y:0.97 },
+        height: 480,
+        polar:{
+          radialaxis:{ visible:true, range:[0,115], tickvals:[0,25,50,75,100],
+                       tickfont:{size:11, family:FONT, color:'#666'}, gridcolor:'#dde3ea', linecolor:'#ccc' },
+          angularaxis:{ tickfont:{size:12, family:FONT}, gridcolor:'#dde3ea', linecolor:'#ccc' },
+          bgcolor:'rgba(0,0,0,0)'
+        },
+        legend:{ orientation:'h', xanchor:'center', x:0.5, y:-0.05, font:{size:12, family:FONT} },
+        paper_bgcolor:'rgba(0,0,0,0)',
+        margin:{ t:50, b:40, l:30, r:30 },
+        font:{ family:FONT, size:12 }
+      };
+      Plotly.newPlot(radarModalPlot, [ontoT, mT], layout, { responsive:true, displayModeBar:false });
+      radarModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRadarModal() {
+      radarModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('radar-modal-close').addEventListener('click', closeRadarModal);
+    radarModal.addEventListener('click', function(e) { if (e.target === radarModal) closeRadarModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && radarModal.classList.contains('open')) closeRadarModal(); });
+
+    /* attach click to each radar card and maximize button */
+    document.querySelectorAll('.radar-card').forEach(function(card) {
+      var idx = parseInt(card.dataset.radar);
+      card.querySelector('.radar-maximize-btn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        openRadarModal(idx);
+      });
+      card.addEventListener('click', function() { openRadarModal(idx); });
+    });
+
+    RADAR.forEach(function(m, idx) {
+      var ontoTrace = {
+        type:'scatterpolar', name:'OntoAgent',
+        r: ontoR, theta: theta,
+        fill:'toself', fillcolor:'rgba(27,94,32,0.07)',
+        line:{ color:'#1B5E20', width:1.8, dash:'dot' },
+        mode:'lines', hoverinfo:'skip', showlegend:false
+      };
+      var modelTrace = {
+        type:'scatterpolar', name: m.name,
+        r: m.vals.concat([m.vals[0]]), theta: theta,
+        fill:'toself', fillcolor: m.color + '33',
+        line:{ color: m.color, width:2.5 },
+        mode:'lines+markers',
+        marker:{ size:6, color:m.color, line:{color:'white',width:1.2} },
+        hovertemplate:'%{theta}: <b>%{r:.0f}%</b><extra></extra>',
+        showlegend:false
+      };
+      var layout = {
+        title:{ text: m.name, font:{ size:13, family:FONT, color:m.color, weight:700 }, y:0.97 },
+        height: 280,
+        polar:{
+          radialaxis:{
+            visible:true, range:[0,115],
+            tickvals:[0,25,50,75,100],
+            tickfont:{size:9, family:FONT, color:'#888'},
+            gridcolor:'#dde3ea', linecolor:'#ccc'
+          },
+          angularaxis:{
+            tickfont:{size:9.5, family:FONT},
+            gridcolor:'#dde3ea', linecolor:'#ccc'
+          },
+          bgcolor:'rgba(0,0,0,0)'
+        },
+        paper_bgcolor:'rgba(0,0,0,0)',
+        margin:{ t:36, b:10, l:20, r:20 },
+        font:{ family:FONT, size:11 },
+        hoverlabel:{ font:{family:FONT, size:11} }
+      };
+      Plotly.newPlot('chart-radar-' + idx, [ontoTrace, modelTrace], layout,
+                    { responsive:true, displayModeBar:false });
+    });
+  })();
+  </script>
+
+  <script>
+  /* ── Glossary search + alphabet filter ── */
+  (function() {
+    var search   = document.getElementById('gloss-search');
+    var alphaBtns= document.querySelectorAll('.gloss-alpha-btn');
+    var terms    = document.querySelectorAll('.gloss-term');
+    var sections = document.querySelectorAll('.gloss-section');
+
+    search.addEventListener('input', function() {
+      var q = this.value.toLowerCase().trim();
+      alphaBtns.forEach(function(b) { b.classList.remove('active'); });
+      document.querySelector('.gloss-alpha-btn[data-letter="all"]').classList.add('active');
+      if (!q) {
+        sections.forEach(function(s) { s.style.display = ''; });
+        terms.forEach(function(t) { t.style.display = ''; });
+        return;
+      }
+      sections.forEach(function(s) {
+        var show = false;
+        s.querySelectorAll('.gloss-term').forEach(function(t) {
+          var match = t.dataset.term.includes(q) ||
+                      t.querySelector('.gloss-title').textContent.toLowerCase().includes(q) ||
+                      t.querySelector('.gloss-def').textContent.toLowerCase().includes(q);
+          t.style.display = match ? '' : 'none';
+          if (match) show = true;
+        });
+        s.style.display = show ? '' : 'none';
+      });
+    });
+
+    alphaBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var letter = this.dataset.letter;
+        alphaBtns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        search.value = '';
+        if (letter === 'all') {
+          sections.forEach(function(s) { s.style.display = ''; });
+          terms.forEach(function(t) { t.style.display = ''; });
+        } else {
+          sections.forEach(function(s) {
+            var match = s.dataset.letter === letter;
+            s.style.display = match ? '' : 'none';
+            if (match) s.querySelectorAll('.gloss-term').forEach(function(t) { t.style.display = ''; });
+          });
+        }
+      });
+    });
+  })();
+  </script>
+
+</body>
+</html>

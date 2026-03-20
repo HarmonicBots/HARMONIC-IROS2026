@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from PIL import Image; a=Image.open\\(''Figures/OntoAgentStrategic.png''\\); b=Image.open\\(''Figures/LLMStrategic.png''\\); print\\(f''OntoAgent: {a.size}''\\); print\\(f''LLM: {b.size}''\\)\")"
+    ]
+  }
+}

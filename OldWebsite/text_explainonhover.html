@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Image with Explanatory Hotspots</title>
+<style>
+  :root { --tooltip-max: 260px; }
+  body { font-family: system-ui, sans-serif; margin: 0; padding: 2rem; background: #fafafa; }
+  .figure {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    background: #fff;
+  }
+  .figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Hotspots */
+  .hotspot {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #0b5cff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    outline: none;
+    border: none;
+  }
+  .hotspot:focus-visible {
+    outline: 3px solid #111; /* high-contrast ring */
+    outline-offset: 2px;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    max-width: var(--tooltip-max);
+    background: #111;
+    color: #fff;
+    padding: .6rem .75rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    transform: translate(-50%, calc(-100% - 14px));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    white-space: normal;
+  }
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: -8px;
+    border: 8px solid transparent;
+    border-top-color: #111;
+  }
+  .hotspot[data-open="true"] + .tooltip,
+  .hotspot:hover + .tooltip,
+  .hotspot:focus + .tooltip {
+    opacity: 1;
+  }
+
+  /* Keep tooltips within edges */
+  .tooltip[data-edge="left"] { transform: translate(0, calc(-100% - 14px)); left: 8px !important; }
+  .tooltip[data-edge="right"] { transform: translate(-100%, calc(-100% - 14px)); left: auto !important; right: 8px !important; }
+  .tooltip[data-edge="bottom"] { transform: translate(-50%, 14px); }
+  .tooltip[data-edge="bottom"]::after { top: -16px; bottom: auto; border-top-color: transparent; border-bottom-color: #111; }
+</style>
+</head>
+<body>
+
+<div class="figure" id="annotated-figure" aria-label="Annotated image explaining key parts">
+  <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?q=80&w=1600&auto=format&fit=crop" 
+       alt="Example circuit board with components" />
+
+  <!-- Hotspot template: data-x / data-y are % positions relative to the image box -->
+  <button class="hotspot" style="left: 26%; top: 38%;" aria-label="Power regulator" aria-describedby="tip-1"></button>
+  <div class="tooltip" role="tooltip" id="tip-1">
+    Power regulator: steps input voltage down to a stable 3.3V for logic.
+  </div>
+
+  <button class="hotspot" style="left: 63%; top: 54%;" aria-label="Microcontroller" aria-describedby="tip-2"></button>
+  <div class="tooltip" role="tooltip" id="tip-2">
+    Microcontroller: runs firmware, handles I/O, and communicates over SPI/I²C.
+  </div>
+
+  <button class="hotspot" style="left: 76%; top: 22%;" aria-label="Oscillator" aria-describedby="tip-3"></button>
+  <div class="tooltip" role="tooltip" id="tip-3">
+    Crystal oscillator: provides the clock signal for precise timing.
+  </div>
+</div>
+
+<script>
+  // Make tooltips smart about edges and support tap-to-toggle on touch devices.
+  (function () {
+    const figure = document.getElementById('annotated-figure');
+    const hotspots = [...figure.querySelectorAll('.hotspot')];
+
+    function placeTooltip(hotspot, tooltip) {
+      // Clear edge hints
+      tooltip.removeAttribute('data-edge');
+
+      // Compute bounding boxes
+      const figBox = figure.getBoundingClientRect();
+      const tipBox = tooltip.getBoundingClientRect();
+      const hsBox = hotspot.getBoundingClientRect();
+
+      // Default tooltip is centered above the hotspot.
+      // Check if it overflows left/right/top; adjust with data-edge hints.
+      if (tipBox.left < figBox.left + 8) {
+        tooltip.setAttribute('data-edge', 'left');
+        tooltip.style.left = `${hsBox.left - figBox.left}px`;
+      } else if (tipBox.right > figBox.right - 8) {
+        tooltip.setAttribute('data-edge', 'right');
+        tooltip.style.left = `${hsBox.left - figBox.left}px`;
+      } else {
+        tooltip.style.left = `${hsBox.left - figBox.left}px`;
+      }
+
+      // If above would clip off-screen at the top, flip to bottom
+      if (tipBox.top < figBox.top + 8) {
+        tooltip.setAttribute('data-edge', 'bottom');
+      }
+    }
+
+    function closeAllExcept(btn) {
+      hotspots.forEach(h => { if (h !== btn) h.dataset.open = "false"; });
+    }
+
+    hotspots.forEach(btn => {
+      const tip = btn.nextElementSibling;
+
+      // Hover/focus positioning
+      const showEvents = ['mouseenter', 'focus'];
+      const hideEvents = ['mouseleave', 'blur'];
+
+      showEvents.forEach(evt =>
+        btn.addEventListener(evt, () => {
+          btn.dataset.open = "true";
+          // next frame so CSS visibility applies before measuring
+          requestAnimationFrame(() => placeTooltip(btn, tip));
+        })
+      );
+
+      hideEvents.forEach(evt =>
+        btn.addEventListener(evt, () => { btn.dataset.open = "false"; })
+      );
+
+      // Tap/click toggling (for touch and mouse)
+      btn.addEventListener('click', (e) => {
+        const open = btn.dataset.open === "true";
+        if (!open) {
+          closeAllExcept(btn);
+          btn.dataset.open = "true";
+          requestAnimationFrame(() => placeTooltip(btn, tip));
+        } else {
+          btn.dataset.open = "false";
+        }
+        e.stopPropagation();
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', () => {
+      hotspots.forEach(h => h.dataset.open = "false");
+    });
+
+    // Recalculate on resize
+    window.addEventListener('resize', () => {
+      hotspots.forEach(btn => {
+        if (btn.dataset.open === "true") placeTooltip(btn, btn.nextElementSibling);
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
+
