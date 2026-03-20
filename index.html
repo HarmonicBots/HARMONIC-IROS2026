@@ -993,6 +993,13 @@
   </footer>
 
   <!-- Scripts -->
+  <script>
+    /* Apply blind/unblind visibility based on the BLIND_REVIEW flag */
+    (function() {
+      const show = BLIND_REVIEW ? '[data-blind]' : '[data-unblind]';
+      document.querySelectorAll(show).forEach(el => el.style.display = '');
+    })();
+  </script>
   <script src="js/harmonic.js"></script>
   <script src="js/modal.js"></script>
   <script src="js/architecture.js"></script>
